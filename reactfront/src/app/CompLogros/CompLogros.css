@@ -1,0 +1,24 @@
+.bgGold{
+
+
+  
+    background:linear-gradient(to right, #BF953F, #c9c48e, #B38728, #c9c48e, #AA771C);
+}
+
+
+:root {
+    --color-inactivo: #6e4906;
+    --color-hover: #edd6ad;
+}
+
+.valoracion button {
+    background-color: initial;
+    border: 0;
+    color: var(--color-inactivo);
+    transition: 1s all;
+}
+#cardLogros:hover .valoracion button {
+    cursor: pointer;
+    color: var(--color-hover);
+    transform: rotate(360deg);
+}
