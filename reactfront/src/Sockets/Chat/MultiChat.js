@@ -4,14 +4,16 @@ import { useState, useEffect } from "react"
 import { Link } from 'react-router-dom'
 
 
+import { Navbar, Nav, NavDropdown }  from 'react-bootstrap';
+
+
+
+
 import conectarSocket from "./../Socket"
 
 
 
 import { useAuth, getRolUruaria, getUruaria, isVoluntaria, isCoordinadora } from './../../app/funciones'
-
-
-
 
 
 
@@ -38,9 +40,6 @@ import "./MultiChat.css"
 
     const  ULR_BASE = process.env.REACT_APP_BASE_URL;
     const URI = ULR_BASE+"Chats/";
-
-    const { Navbar, Nav, NavDropdown } = ReactBootstrap;
-
 
 
 const CompMultiChat = ( props, ref ) => {
@@ -72,6 +71,9 @@ const CompMultiChat = ( props, ref ) => {
      // console.log("mensaje enviado",msg);
       socket.emit('mensaje', msg)
    }
+
+
+
 
 
    const  selescionarConversacion  = (e,c) =>{
@@ -114,6 +116,9 @@ const CompMultiChat = ( props, ref ) => {
             
             <MDBContainer fluid className="py-5" style={{ backgroundColor: "#212529" }}>
                 <MDBRow>
+
+
+
 
                 
                     
@@ -158,7 +163,12 @@ const CompMultiChat = ( props, ref ) => {
                                 </MDBTypography>
                                 </div>
                             </div>
+                            <div class="shadow-sm">...</div>
+
+
+                                
                             </MDBCol>
+                            
 
 
                             {/* chatBox */}

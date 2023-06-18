@@ -5,15 +5,31 @@ import { useState, useEffect, forwardRef, useRef, useImperativeHandle } from "re
 import { Link } from 'react-router-dom'
 import { useAuth, getRolUruaria, getUruaria, isVoluntaria, isCoordinadora } from './../app/funciones'
 
+
+import { Button, Form, Modal }  from 'react-bootstrap';
+
 const  ULR_BASE = process.env.REACT_APP_BASE_URL;
-    const URI = ULR_BASE+"AsignacionCaso/";
+const URI = ULR_BASE+"AsignacionCaso/";
 
 const CompEmergencias = forwardRef((props, ref) => {
+
+    //array de incidencias
+    const [emergenciasAtencion, setEmergenciasAtencion] = useState(props.emergencias);
+
+    const [emergenciaActual, setEmergenciaActual] = useState(null);
+    
     const [msgEstado, setMegEstado] = useState('');
     const [msgError, setMegError] = useState('');
     const limpiarMsg = () => {
         setMegEstado("")
         setMegError("")
+    }
+
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => {
+       
+        setShow(true);
     }
 
     // funciones compartidas 
@@ -26,13 +42,29 @@ const CompEmergencias = forwardRef((props, ref) => {
     }))
 
 
-    //array de incidencias
-    const [emergenciasAtencion, setEmergenciasAtencion] = useState(props.emergencias);
-
+    
 
     //cambiar el estatus de una emergencia
     const atenderEmergencia  =(id,Voluntarias)=>{
         props.emitirMensaje("EstatusEmerg",{id,Voluntarias,Estatus:1,Voluntaria:getUruaria().id})
+    }
+
+
+    const mostrarEmergencia = (emergencia)=>{
+        console.log(emergenciasAtencion);
+
+        // let enlaceMapa =  (emergencia.Coordenadas.latitud) ?  `https://maps.google.com/maps?q=${emergencia.Coordenadas.latitud},%20${emergencia.Coordenadas.longitud}+(Mi%20nombre%20de%20egocios)&z=1&ie=UTF8&iwloc=B&output=embed`   :  "https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=es&amp;q=19.502997988,%20-99.141332768+(Mi%20nombre%20de%20egocios)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"   ;
+
+        let enlaceMapa =  (emergencia.Coordenadas.latitud) ? "https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=es&amp;q=19.3188855,%20-98.8968611+(Mi%20nombre%20de%20egocios)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"  :  "https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=es&amp;q=19.502997988,%20-99.141332768+(Mi%20nombre%20de%20egocios)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"   ;
+
+
+        let copiaEmergencia = {...emergencia,enlaceMapa}
+
+        
+        setEmergenciaActual(copiaEmergencia);
+        handleShow();
+        console.log("emergenciaActual",emergenciaActual);
+
     }
 
 
@@ -41,7 +73,7 @@ const CompEmergencias = forwardRef((props, ref) => {
             <div className="row">
                 <div className="col">
                     <h1><i className="fa-solid fa-land-mine-on"></i>Emergencias</h1>
-                    emergenciasAtencion : {emergenciasAtencion.length}
+                    Conteo : {emergenciasAtencion.length}
                     <div className="row">
                         <div className="alert alert-success" role="alert">{msgEstado}</div>
                         <div className="alert alert-danger" role="alert">{msgError}</div>
@@ -84,7 +116,7 @@ const CompEmergencias = forwardRef((props, ref) => {
                                     <td>
                                         <div className="btn-group" role="group" >
 
-                                            <button type="button" title="Ver Detalle" className="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+                                            <button type="button"  onClick={() =>  mostrarEmergencia( emerg ) }   title="Ver Detalle" className="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
                                                 Ver Detalle
                                             </button>
 
@@ -105,26 +137,227 @@ const CompEmergencias = forwardRef((props, ref) => {
                     </table>
 
 
-                    {/* <!-- Modal --> */}
-                    <div className="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                        <div className="modal-dialog modal-dialog-centered" role="document">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h5 className="modal-title" id="exampleModalCenterTitle">Modal title</h5>
-                                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div className="modal-body">
-                                    ALgun texto aqui
-                                </div>
-                                <div className="modal-footer">
-                                    <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="button" className="btn btn-primary">Save changes</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {/* <!-- Button trigger modal --> */}
+
+
+
+                    <Button variant="primary" onClick={handleShow}>
+        Launch demo modal
+      </Button>
+
+
+
+    {emergenciaActual ? (
+                                
+      <Modal show={show} onHide={handleClose} size="xl">
+        <Modal.Header closeButton>
+          <Modal.Title>Información Emergencia</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+         
+                <div className='row'>
+                        <div className='col col-md-4'>
+                             <div className='row'> 
+                                <div className='col '>
+                                        
+
+                                <iframe width="100%" height="400" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
+                                    
+                                    src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=es&amp;q=19.502997988,%20-99.141332768+(Mi%20nombre%20de%20egocios)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed">
+                          
+                                </iframe>
+
+
+                                {/* <iframe width="100%" height="400" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
+                                    
+                                    src={emergenciaActual.enlaceMapa}>
+                          
+                                </iframe> */}
+
+
+                                        
+                                </div>       
+                             </div>
+
+
+                             <div className='row'>
+                                <div className='col '>
+                                        
+
+                                        <div class="card border-info mb-3">
+                                            <div class="card-header">Datos de la emergencia</div>
+                                            <div class="card-body text-info">
+                                                <h5 class="card-title"> </h5>
+                                                <p class="card-text">
+
+                                                                   
+
+
+                                                                    <table class="table">
+                                                                        
+
+                                                                        <tbody>
+                                                                            <tr>                                                                            
+                                                                                <th>Id</th>
+                                                                                <td>{emergenciaActual.Emergencia.id}</td>                                                                            
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th>Estatus</th>
+                                                                                <td>{emergenciaActual.Emergencia.Estatus}</td>   
+                                                                            </tr>
+
+                                                                            <tr>                                                                            
+                                                                                <th>Atendido por:</th>
+                                                                                <td>{emergenciaActual.Emergencia.Voluntaria_Atendio}</td>                                                                            
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th>Fecha</th>
+                                                                                <td>{emergenciaActual.Emergencia.updatedAt}</td>
+                                                                            </tr>
+
+                                                                        </tbody>
+
+                                                                        </table>
+
+                                                </p>
+                                            </div>
+                                        </div>
+
+
+                                </div>                                          
+                             </div>
+                                           
+                      </div>     
+
+                       <div className='col col-md-8'>
+                                        <div className='row'> 
+                                            <div className='col '>
+
+                                            <div class="card border-info mb-3">
+                                            <div class="card-header">Datos personales</div>
+                                            <div class="card-body text-info">
+                                                <h5 class="card-title"> @{emergenciaActual.Usuaria.NickName} </h5>
+                                                <p class="card-text">
+
+                                                                   
+
+
+                                                                    <table class="table">
+                                                                        <tbody>
+                                                                            <tr>                                                                            
+                                                                                <th>Id</th>
+                                                                                <td>{emergenciaActual.Usuaria.id}</td>                                                                            
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th>Nombre</th>
+                                                                                <td>{emergenciaActual.Usuaria.Nombre} {emergenciaActual.Usuaria.ApellidoPaterno} {emergenciaActual.Usuaria.ApellidoMaterno} </td>
+                                                                            </tr>
+
+                                                                            <tr>                                                                            
+                                                                                <th>Email</th>
+                                                                                <td>{emergenciaActual.Usuaria.Email}</td>                                                                            
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th>Telefono</th>
+                                                                                <td>{emergenciaActual.Usuaria.Telefono}</td>
+                                                                            </tr>
+
+                                                                            <tr>
+                                                                                <th>PerfilFB</th>
+                                                                                <td>{emergenciaActual.Usuaria.PerfilFB}</td>
+                                                                            </tr>
+
+
+                                                                            <tr>                                                                            
+                                                                                <th>Entidad Federativa</th>
+                                                                                <td>{emergenciaActual.Usuaria.EntidadFederativa}</td>                                                                            
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th>Ciudad</th>
+                                                                                <td>{emergenciaActual.Usuaria.Ciudad}</td>
+                                                                            </tr>
+
+                                                                            <tr>                                                                            
+                                                                                <th>Fecha de nacimiento</th>
+                                                                                <td>{emergenciaActual.Usuaria.FechaNacimiento}</td>                                                                            
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th>Rol</th>
+                                                                                <td>{emergenciaActual.Usuaria.Rol}</td>
+                                                                            </tr>
+
+                                                                            <tr>
+                                                                                <th>Miembro desde </th>
+                                                                                <td>{emergenciaActual.Usuaria.createdAt}</td>
+                                                                            </tr>
+                                                                            
+                                                                        </tbody>
+                                                                        </table>
+
+                                                </p>
+                                            </div>
+                                        </div>
+
+
+                                            </div>       
+                                        </div>
+
+
+                                        <div className='row'>
+                                            <div className='col '>
+
+                                                    <table className="table  table-striped table-hover  table-bordered ">
+                                                            <thead className="table-info">
+                                                                <tr>
+                                                                <th scope="col">Ticket</th>
+                                                                <th scope="col">Semaforo</th>
+                                                                <th scope="col">Voluntaria</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+
+                                                            {emergenciaActual.Casos.map((caso, index) => (
+                                                                 <tr key={index} >
+
+                                                                            <td> {caso.deTicket.Descripcion} </td>
+                                                                            <td> {caso.deTicket.Semaforo_id} </td>
+                                                                            <td> {caso.deVoluntaria.Nombre}  {caso.deVoluntaria.ApellidoPaterno}  {caso.deVoluntaria.ApellidoMaterno}   (@{caso.deVoluntaria.NickName}) </td> 
+                                                                            
+                                                                    </tr>  
+                                                                ))}
+
+                                                                   
+                                                    
+                                                            </tbody>
+                                                    </table>
+
+
+
+                                            </div>                                          
+                                        </div>
+
+                      </div>                   
+
+                </div>
+
+
+
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleClose}>
+           Aceptar
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+        ) : (
+            null
+    )}
+                   
+
                     {/*  <!--FIN Modal --> */}
 
 

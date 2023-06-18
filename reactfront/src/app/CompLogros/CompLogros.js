@@ -65,12 +65,18 @@ const LogrosComponent = () => {
 
                                                 { logros.map( (logro)=>(
 
-                                                    <div key={ logro.id}   className="col-3">
+                                                    <div key={ logro.id}   className="col col-md-3">
                                                         <i className="fa-solid fa-star"></i> 
                                                         <div className='h6'> {logro.descPremio.Nombre} </div>
                                                     </div>
                                 
-                                                ))}                                               
+                                                ))}   
+
+
+
+
+
+
 
                                         </div>
 

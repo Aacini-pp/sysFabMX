@@ -97,11 +97,35 @@ TicketControler.obtener = async (req, res) => {
 TicketControler.crear = async (req, res) => {
     console.log("TicketControler.crear ");
 
-    //analizar texto 
-    const resp = await analisisCasos(req.body.Descripcion)
-    console.log(resp);
+    
 
     try {
+
+        //si tiene tickets en estatus 1.Activo o 2.SinAsignar lanzar error de no autorizado 
+        const noTicket = await TicketModel.count({
+            where: { 
+                Usuaria: req.session.usuaria.id,
+               Estatus: [1,2]
+                
+             },
+             
+            
+        });
+
+        console.log("NoTicket",noTicket);
+
+        if( noTicket > 0 ){
+            throw new Error('No puede crear un Ticket nuevo si tiene "Activo" o "Sin asignar"')
+
+        }
+
+
+        //analizar texto 
+            const resp = await analisisCasos(req.body.Descripcion)
+            console.log(resp);
+
+
+
         await TicketModel.create({
             Usuaria: req.session.usuaria.id,
             Descripcion: req.body.Descripcion,

@@ -272,16 +272,16 @@ function App() {
         
         
         
-      setEmergencias(emergActualizadas)
+      setEmergencias(emergActualizadas)   //actualizar las emergencias
         
-        if (childCompRef.current) {
+        if (childCompRef.current) {   //pasarlas al comp Emergencias si es que es el qeu esta en ventana
           childCompRef.current.setemErgencias(emergActualizadas)
         }
 
       })
 
 
-
+        //leer mensages del chat
 
       let chanelUserMsg = `Mensajes>${getUruaria().id}`; //canal de la usuaria
       console.log("EscuchandoMensajes ", chanelUserMsg);
@@ -315,7 +315,9 @@ function App() {
             <img src={logo} className="App-logo" alt="logo"></img> 
             
             <div  className="position-absolute  top-50 start-50 translate-middle  ">
-               <img src="/anaBellaMex.png" width="82%" ></img> 
+              <a href="/">
+                   <img src="/anaBellaMex.png" width="82%" ></img> 
+               </a>
             </div>
           </div>
          

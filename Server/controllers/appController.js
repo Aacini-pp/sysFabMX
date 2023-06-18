@@ -631,8 +631,10 @@ appControler.MisMensages=  async (req, res) => {
         
     // } 
 
-    console.log(req.session)
-    const  idUsuaria =  req.session.usuaria.id  ;
+   
+
+   const  idUsuaria =   ( req.session.usuaria ) ?    req.session.usuaria.id  : 1 ;  //si esta en prueba mostrar la coordinadora
+   
 
 
     let respustaMsg   = { };
@@ -691,14 +693,14 @@ appControler.MisMensages=  async (req, res) => {
             coords.map((coordinadora) => {
 
                 if( ! Object.keys(respustaMsg ).includes(  String(coordinadora.id  )   )    ){  // si ya se encuentra 
-                    console.log("agregando coordinadora",coordinadora)
+                   
                     respustaMsg[   String(coordinadora.id  )  ] = {
                                                                     Usuaria: coordinadora,
                                                                     mensajesNoleidos : 0,
                                                                     mensages: [ ]
                                                                  }
 
-                    console.log("respustaMsg",respustaMsg)
+                 
                 }
                
             })
@@ -727,7 +729,7 @@ appControler.MisMensages=  async (req, res) => {
         casosAAtender.map((caso) => {
             if( ! Object.keys(respustaMsg ).includes(  String( caso.deTicket.deUsuaria.id  )   )    ){  // si no se encuentra 
 
-                console.log("agregando victima", caso.deTicket.deUsuaria)
+                
                     respustaMsg[   String(  caso.deTicket.deUsuaria.id  )  ] = {
                                                                     Usuaria:  caso.deTicket.deUsuaria,
                                                                     mensajesNoleidos : 0,
@@ -758,7 +760,7 @@ appControler.MisMensages=  async (req, res) => {
             
             if( ! Object.keys(respustaMsg ).includes(  String( caso.deVoluntaria.id  )   )    ){  // si no se encuentra 
 
-                console.log("agregando victima", caso.deVoluntaria.id )
+               
                     respustaMsg[   String(  caso.deVoluntaria.id  )  ] = {
                                                                     Usuaria: caso.deVoluntaria,
                                                                     mensajesNoleidos : 0,

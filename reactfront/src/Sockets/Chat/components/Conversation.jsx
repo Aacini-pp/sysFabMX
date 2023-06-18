@@ -97,7 +97,7 @@ export default function Conversation( { conversation, currentUser }  ) {
 
                                                   {roles.map((rol) => (
                                                       currentUser.Rol > 2 &&  rol.id ==  currentUser.Rol  )
-                                                    ? (  <span className="fs-6" > (  {rol.Nombre  })</span> )
+                                                    ? (  <span className="fs-6" > ({rol.Nombre  })</span> )
                                                     : null
                                                     )}
                                                  
