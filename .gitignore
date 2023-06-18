@@ -50,6 +50,8 @@ reactfront/.env
 Server/node_modules/
 Server/node_modules/*
 Server/.env
+Server/keys/
+Server/keys/*
 
 
 # Snowpack dependency directory (https://snowpack.dev/)
