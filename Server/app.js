@@ -4,6 +4,10 @@ import http from 'http';
 import express from 'express';
 import { Server as WebSocketServer } from 'socket.io';
 
+
+import  fs from "fs";
+import https from "https";
+
 import session from 'express-session';
 import SequelizeStore from 'connect-session-sequelize';
 import cors from 'cors';
@@ -39,8 +43,20 @@ import MensagesModel from "./models/MensagesModel.js";
 import relaciones from "./models/relacions.js"
 
 
+
+
 const app = express();
-const httpServer = http.createServer(app);
+
+//const httpServer = http.createServer(app);
+const httpServer = https.createServer(
+    {
+        cert:fs.readFileSync("keys/certificate.crt"),
+        key:fs.readFileSync("keys/private.key")
+    },
+    app);
+
+
+
 
 app.use(express.static('public'));
 app.use(cors()); //permitir cruce de dominio
@@ -347,9 +363,9 @@ io.on('connection', async (socket) => {
 
 
 
-httpServer.listen(8080, () => {
-   // console.log(process.env)
-    console.log("Servidor corriendo")
+httpServer.listen(  process.env.PORT_SERV , () => {
+   // console.log(process.env) 
+    console.log("Servidor corriendo en ",  process.env.PORT_SERV )
 })
 
 
