@@ -632,7 +632,7 @@ appControler.MisMensages=  async (req, res) => {
     // } 
 
     console.log(req.session)
-    const  idUsuaria = 1;// req.session.usuaria.id  ;
+    const  idUsuaria =  req.session.usuaria.id  ;
 
 
     let respustaMsg   = { };
