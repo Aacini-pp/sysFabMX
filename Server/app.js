@@ -48,7 +48,6 @@ import relaciones from "./models/relacions.js"
 const app = express();
 let httpServer = null;
 if ( process.env.PORT_SERV == 443  ){ //SI puerto http usar certificados
-
     httpServer = https.createServer(
         {
             cert:fs.readFileSync("keys/certificate.crt"),
