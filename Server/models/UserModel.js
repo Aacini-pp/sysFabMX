@@ -20,26 +20,12 @@ const UsuarioModel = db.define("Usuaria", {
   },
   ApellidoPaterno: {
     type: DataTypes.STRING,
-    allowNull: true,
-    validate: {
-      isAlpha: {
-        args: true,
-        msg: "Los apellidos solo pueden contener letras"
-      }
-    }
-
+    allowNull: true
   },
 
   ApellidoMaterno: {
     type: DataTypes.STRING,
-    allowNull: true,
-    validate: {
-      isAlpha: {
-        args: true,
-        msg: "Los apellidos solo pueden contener letras"
-      }
-    }
-
+    allowNull: true  
   },
 
   NickName: {
