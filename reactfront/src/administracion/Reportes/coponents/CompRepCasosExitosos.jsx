@@ -99,7 +99,7 @@ const CompRepCasosExitosos = () => {
                     <h5 className="card-title">  Casos exitosos </h5>
                     <p className="card-text ">
 
-                        <div className='row justify-content-center'>
+                        <div className='row justify-content-center  overflow-auto '>
                             
                                 <LineChart
                                 width={900}

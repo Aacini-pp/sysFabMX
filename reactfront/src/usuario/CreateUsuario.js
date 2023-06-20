@@ -228,7 +228,7 @@ const CompRegistrarUsuario = () => {
                 setEstatus(e.target.value);
               }}
             >
-              <option value=""> Seleccione un estauts.. </option>
+              <option value=""> Seleccione un estatus.. </option>
               {estatusArry.map((estatusItem) => (
                 <option key={estatusItem.id} value={estatusItem.id}>
                   {" "}

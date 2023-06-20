@@ -3,7 +3,7 @@ import io from "socket.io-client"
 //import socket from "./../Sockets/Socket"
 import axios from 'axios'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect ,forwardRef, useRef} from 'react'
 //import {useNative} from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
@@ -24,9 +24,13 @@ let socket
 
 
 
-const CompMainMenu = () => {
+const CompMainMenu = forwardRef(  (props, ref) => {
   const navigate = useNavigate();
   const [Usuaria, setUsuaria] = useState("");
+
+  const [disabledEmergencia, setDisabledEmergencia] = useState(false);
+
+  
   let Coordenadas = useCoordenadas();
   let usuria
 
@@ -40,6 +44,30 @@ const CompMainMenu = () => {
 
 
 
+  
+
+  const confirmarEnvioEmergencia =  ()=>{
+
+    let copyCofToast = {
+      bg:"warning",
+      visible:true,
+      Title:"emergencia enviada",
+      Text:"La ayuda esta en camino",
+      audio:"warning",
+      timeClose:10000,
+   }
+        props.customToast(copyCofToast)
+
+        setDisabledEmergencia(true) //
+        setTimeout(() => {
+          setDisabledEmergencia(false)
+        },   copyCofToast.timeClose   );
+
+
+        console.log("custom toast app",copyCofToast)
+  }
+
+
 
   const emergencia = (e) => {
 
@@ -51,6 +79,9 @@ const CompMainMenu = () => {
 
     console.log(param)
     socket.emit('Emergencia', param)
+
+
+    confirmarEnvioEmergencia()
 
   }
 
@@ -202,7 +233,7 @@ const CompMainMenu = () => {
     ):null}
 
     {(useAuth()) ?(
-      <button className="btn btn-danger m-2 " onClick={emergencia} > <h1 className="display-10 "> <i className="fa-solid fa-land-mine-on"></i> </h1> </button>
+      <button className="btn btn-danger m-2 " onClick={emergencia} disabled={disabledEmergencia}> <h1 className="display-10 "> <i className="fa-solid fa-land-mine-on"></i> </h1> </button>
     ):null}
 
     </Navbar>
@@ -215,7 +246,7 @@ const CompMainMenu = () => {
     
 
   )
-}
+})
 
 
 export default CompMainMenu

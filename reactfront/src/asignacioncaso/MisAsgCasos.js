@@ -3,6 +3,7 @@ import axios from 'axios'
 import { useState, useEffect } from "react"
 import { Link } from 'react-router-dom'
 
+import ReactTimeAgo from 'react-time-ago' 
 
 const  ULR_BASE = process.env.REACT_APP_BASE_URL;
     const URI = ULR_BASE+"MisAsignaciones/";
@@ -50,6 +51,9 @@ const CompMisAsgCasos = () => {
 
     }
 
+
+
+
     return (
         <div className="container">
             <div className="row">
@@ -81,7 +85,20 @@ const CompMisAsgCasos = () => {
                                 <tr key={AsgCaso.id} >
                                     <td> {AsgCaso.id}  </td>
 
-                                    <td > <Link to={`/Tickets/${AsgCaso.deTicket.id}`} >{AsgCaso.Ticket}</Link>:  {AsgCaso.deTicket.Descripcion}    </td>
+                                    <td > <Link to={`/Tickets/${AsgCaso.deTicket.id}`} >{AsgCaso.Ticket}</Link>:  {AsgCaso.deTicket.Descripcion}  
+                                    
+                                        <div className='row justify-content-start' >
+
+                                        {AsgCaso.susAvances.map((avance) => (
+                                            <div class="col " key={avance.id} >   <Link to={`/AvanceCaso/create/${AsgCaso.id}`} className="h6" >  <ReactTimeAgo date={ avance.createdAt } locale="es-MX"/>  </Link>  </div>
+
+
+                                        ))}
+                                       
+
+                                        </div>
+                                    
+                                      </td>
                                     <td> <Link to={`/Usuarios/${AsgCaso.deTicket.deUsuaria.id}`} > {AsgCaso.deTicket.deUsuaria.NickName}  </Link>  </td>
 
 

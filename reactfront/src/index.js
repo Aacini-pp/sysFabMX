@@ -7,6 +7,7 @@ import reportWebVitals from './reportWebVitals';
 import * as bootstrap from 'bootstrap';
 
 import "bootstrap/dist/css/bootstrap.min.css";
+import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
 //import  "bootstrap/dist/js/bootstrap.bundle.js";
 
@@ -17,6 +18,8 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 );
+
+serviceWorkerRegistration.register();
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

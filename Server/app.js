@@ -18,6 +18,7 @@ import db from './database/db.js';
 import usersRoutes from './routes/usersRoutes.js'
 import ticketsRoutes from './routes/ticketsRoutes.js'
 import asignacionCasoRoutes from './routes/asignacionCasoRoutes.js'
+import avanceDeCasoRoutes from './routes/AvanceDeCasoRoutes.js'
 
 //catalogos
 import EstadosRoutes from './routes/Catalogos/estadosRoutes.js'
@@ -108,6 +109,12 @@ app.use("/Usuarios", usersRoutes);
 app.use("/Tickets", ticketsRoutes);
 app.use("/AsignacionCaso", asignacionCasoRoutes);
 app.use("/Reportes/", ReportesRoutes);
+
+
+app.use("/AvanceDeCaso/", avanceDeCasoRoutes);
+
+
+
 
 
 

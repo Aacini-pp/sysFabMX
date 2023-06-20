@@ -1,6 +1,12 @@
 import UsuarioModel from "./UserModel.js"
 import TicketModel from "./TicketModel.js"
 import AsignacionCasoModel from "./AsignacionCasoModel.js"
+
+import AvanceDeCasoModel from "../models/AvanzeCasoModel.js";
+
+
+
+
 import Premios_UsuariaModel from "./Premios_UsuariasModel.js"
 import MensagesModel from "./MensagesModel.js"
 
@@ -43,6 +49,7 @@ const Relaciones={
         Usuaria: AsignacionCasoModel.belongsTo(UsuarioModel,{as:"deVoluntaria",foreignKey:"Voluntaria"}),
         Ticket: AsignacionCasoModel.belongsTo(TicketModel,{as:"deTicket",foreignKey:"Ticket"}), 
         Estatus:AsignacionCasoModel.belongsTo(EstatusModel,{as:"deEstatus",foreignKey:"Estatus"}),
+        AvanceDeCaso : AsignacionCasoModel.hasMany( AvanceDeCasoModel ,{as:"susAvances",foreignKey:"AsignacionCaso"}    )
     },
    EmailRecuperacion:{
         Usuaria: EmailRecuperacionModel.belongsTo(UsuarioModel,{as:"deUsuaria",foreignKey:"Usuaria"}),

@@ -7,7 +7,7 @@ import TimeAgo from 'javascript-time-ago'
 import es from 'javascript-time-ago/locale/es'
 
 
-import logo from "./logo.svg";
+import logo from "./logo.png";
 import "./App.css";
 
 import conectarSocket from "./Sockets/Socket"
@@ -58,6 +58,10 @@ import CompChat from "./Sockets/CompChat";
 import CompEmergencias from "./Sockets/CompEmergencias"
 import CompMultiChat from "./Sockets/Chat/MultiChat";
 
+
+import Toast from 'react-bootstrap/Toast';
+import ToastContainer from 'react-bootstrap/ToastContainer';
+
  
 
 import { useAuth, getRolUruaria, getUruaria, isVoluntaria, isCoordinadora } from './app/funciones'
@@ -67,6 +71,17 @@ import CompNotFound from "./app/NotFound";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 function App() {
+
+  
+  const [confToast, setConfToast] = useState({
+     bg:"danger",
+     visible:false,
+     Title:"Emergencia recibida ",
+     Text:"Alguien esta solicitando ayuda",
+     timeClose:4000
+  });
+
+  //const [showToast, setShowToast] = useState( true);
 
   const [emergencias, setEmergencias] = useState([]);
   const [socket, setSocket] = useState(conectarSocket());
@@ -82,6 +97,67 @@ function App() {
 
  
     const [conversaciones, setConversaciones] = useState([]);
+
+
+    const showToast = ()=>{
+      let copyCofToast = { ...confToast}
+      copyCofToast.visible = true;
+      setConfToast(copyCofToast)
+    }
+
+
+    const closeToast = ()=>{
+      let copyCofToast = { ...confToast}
+      copyCofToast.visible = false;
+      setConfToast(copyCofToast)
+    }
+
+
+    const customToast = ( copyCofToast ) => {
+
+      console.log("custom toast app")
+
+     const audio = new Audio(`/sounds/${copyCofToast.audio}.mp3`);
+//      const audio = new Audio('https://res.cloudinary.com/dxfq3iotg/video/upload/v1557233524/success.mp3');
+      audio.play();
+      setConfToast(copyCofToast)
+
+    }
+
+
+    const toastMsg = ()=>{
+      let copyCofToast = {
+        bg:"primary",
+        visible:true,
+        Title:"Mensaje recibido",
+        Text:"Revisa tus mensajes"
+     }
+
+     //const audio = new Audio('https://res.cloudinary.com/dxfq3iotg/video/upload/v1557233524/success.mp3');
+
+     const audio = new Audio(`/sounds/success.mp3`);
+     audio.play();
+     
+      setConfToast(copyCofToast)
+    }
+
+
+
+    const toastEmergencia = ()=>{
+      let copyCofToast = {
+        bg:"danger",
+        visible:true,
+        Title:"Emergencia recibida ",
+        Text:"Alguien esta solicitando ayuda"
+     }
+    // const audio = new Audio('https://res.cloudinary.com/dxfq3iotg/video/upload/v1557233574/error.mp3');
+     const audio = new Audio(`/sounds/error.mp3`);
+     audio.play();
+     
+      setConfToast(copyCofToast)
+    }
+    
+
 
 
     const getMisMensages = async ()=>{
@@ -171,6 +247,9 @@ function App() {
            }
       });
 
+
+     
+
  
       if( posItem !=  null ){ // si se encuentra  conversacion con el 
 
@@ -248,6 +327,7 @@ function App() {
         if (childCompRef.current) { //si estamos en la vista Emergencias actualizar
           childCompRef.current.setemErgencias([...emergencias, msg])
         }
+        toastEmergencia();
 
       })
 
@@ -291,6 +371,11 @@ function App() {
         //recibimos la copia  de las conversaciones
       let copyConversaciones  =  agregarMensaje(msg);        
       setConversaciones([...copyConversaciones]);  //agregar el mensaje  a su usuario y no directamente, 
+      
+
+      if(getUruaria().id  !=   msg.Emisor.id){
+        toastMsg();
+      }
      
       // if (childCompRef.current) { //si estamos en la vista Emergencias actualizar
       //   childCompRef.current.setemErgencias([...conversaciones, msg])
@@ -306,9 +391,13 @@ function App() {
 
   return (
     <div className="App">
+
+       
+          
+
       <header className="App-header">
-        <BrowserRouter>
-          <CompMainMenu />
+        <BrowserRouter> 
+          <CompMainMenu customToast={customToast} />
           
           
           <div  className="position-relative">
@@ -321,10 +410,30 @@ function App() {
             </div>
           </div>
          
+
+
+         
           
 
+          <ToastContainer
+          className="p-5 "
+          position='bottom-end'
+          style={{ zIndex: 1 }}
+        >
 
-
+          <Toast   bg={confToast.bg}   onClose={closeToast }  show={confToast.visible} delay={confToast.timeClose} autohide >
+            <Toast.Header >
+              <img
+                src="holder.js/20x20?text=%20"
+                className="rounded me-2"
+                alt=""
+              />
+              <strong className="me-auto"> {confToast.Title}    </strong>
+              <small>Justo ahora</small>
+            </Toast.Header>
+            <Toast.Body> {confToast.Text}  </Toast.Body>
+          </Toast>
+        </ToastContainer>
 
           <Routes>
             <Route path="/" element={<HomeComponent />} />
@@ -355,7 +464,7 @@ function App() {
               <Route path="/MisTickets/" element={<CompMisTickets />} />
               <Route path="/Tickets/create" element={<CompCreateTickets />} />
               <Route element={<ProtectedRoutesVoluntaria />}>
-                <Route path="/Emergencias" element={<CompEmergencias ref={childCompRef} emergencias={emergencias} emitirMensaje={emitirMensaje}  getEmergencias={getEmergencias} />} />
+                <Route path="/Emergencias" element={<CompEmergencias ref={childCompRef} emergencias={emergencias} emitirMensaje={emitirMensaje}    getEmergencias={getEmergencias} />} />
 
                 <Route path="/MisAsignaciones/" element={<CompMisAsgCasos />} />
                 <Route path="/Usuarios/:id" element={<CompDetalleUsuario />} />
@@ -396,6 +505,9 @@ function App() {
           </Routes>
         </BrowserRouter>
       </header>
+
+
+    
     </div >
   );
 }

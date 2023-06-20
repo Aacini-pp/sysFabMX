@@ -101,7 +101,7 @@ const CompCreateTickets = () => {
                         type="textarea"
                         className="form-control"
                         rows="8"
-                        placeholder="Descriva la situacion por la que requiera ayuda"
+                        placeholder="Describa la situación por la que requiera ayuda"
                         required
                     />
                 </div>

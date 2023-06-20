@@ -211,7 +211,7 @@ const CompMultiChat = ( props, ref ) => {
                                 </div>
                             ) : (
                             <h3 className="text-muted">
-                                Selecione un chat
+                                Seleccione un chat
                             </h3>
                             )}
 

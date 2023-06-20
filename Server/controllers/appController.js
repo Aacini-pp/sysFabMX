@@ -249,7 +249,7 @@ appControler.PasswordOlvidado = async (req, res) => {
 
     //generar token
     token = generarToken(45) //generar token de tamaño 45
-    urlRecuperarpass = " http://localhost:3000/change-password/" + token   //TODO:enviar a dotfile  
+    urlRecuperarpass = process.env.NOMBRE_DOMINIO + ":3000/change-password/" + token   //TODO:enviar a dotfile  
 
     infoCLiente = {
         ...generarInfoCliente(req),
@@ -530,8 +530,13 @@ appControler.MisLogros = async (req, res) => {
 appControler.misAsignaciones = async (req, res) => {
     console.log("UsuarioControler.misAsignaciones ");
     try {
+
+        let idBuscar =   (req.session.usuaria ) ? req.session.usuaria.id: 1;
+        
         const casos = await AsignacionCasoModel.findAll({
-            where: { Voluntaria: req.session.usuaria.id },
+
+          
+            where: { Voluntaria:   req.session.usuaria.id  },
             // Queremos que incluya la relaciónES
             include: [
                 {
@@ -539,6 +544,7 @@ appControler.misAsignaciones = async (req, res) => {
                     include: [{ association: relaciones.Tickets.Usuaria },]
                 },
                 { association: relaciones.AsignacionCaso.Estatus },
+                { association: relaciones.AsignacionCaso.AvanceDeCaso }
 
 
             ]

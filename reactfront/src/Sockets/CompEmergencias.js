@@ -41,7 +41,7 @@ const CompEmergencias = forwardRef((props, ref) => {
         },
     }))
 
-
+  
     
 
     //cambiar el estatus de una emergencia
@@ -50,16 +50,18 @@ const CompEmergencias = forwardRef((props, ref) => {
     }
 
 
+    //cambiar el estatus de una emergencia
+    const concluirEmergencia  =(id,Voluntarias)=>{
+        props.emitirMensaje("EstatusEmerg",{id,Voluntarias,Estatus:5})
+    }
+
     const mostrarEmergencia = (emergencia)=>{
         console.log(emergenciasAtencion);
 
         // let enlaceMapa =  (emergencia.Coordenadas.latitud) ?  `https://maps.google.com/maps?q=${emergencia.Coordenadas.latitud},%20${emergencia.Coordenadas.longitud}+(Mi%20nombre%20de%20egocios)&z=1&ie=UTF8&iwloc=B&output=embed`   :  "https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=es&amp;q=19.502997988,%20-99.141332768+(Mi%20nombre%20de%20egocios)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"   ;
 
         let enlaceMapa =  (emergencia.Coordenadas.latitud) ? "https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=es&amp;q=19.3188855,%20-98.8968611+(Mi%20nombre%20de%20egocios)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"  :  "https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=es&amp;q=19.502997988,%20-99.141332768+(Mi%20nombre%20de%20egocios)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"   ;
-
-
         let copiaEmergencia = {...emergencia,enlaceMapa}
-
         
         setEmergenciaActual(copiaEmergencia);
         handleShow();
@@ -79,7 +81,7 @@ const CompEmergencias = forwardRef((props, ref) => {
                         <div className="alert alert-danger" role="alert">{msgError}</div>
                     </div>
 
-
+                    <div className='overflow-auto'>
 
                     <table className="table table-dark">
                         <thead className="table-primary">
@@ -120,10 +122,16 @@ const CompEmergencias = forwardRef((props, ref) => {
                                                 Ver Detalle
                                             </button>
 
-                                            {(emerg.Emergencia.Estatus ==2)?(<button title="" className='btn btn-success' onClick={() => atenderEmergencia(emerg.Emergencia.id,emerg.Voluntarias)}  >Atender</button>
-                                            ):"" }
-                                            <button title="" className='btn btn-danger'> Concluir</button>
+                                            {(emerg.Emergencia.Estatus == 2)?(<button title="" className='btn btn-success' onClick={() => atenderEmergencia(emerg.Emergencia.id,emerg.Voluntarias)}  >Atender</button>
+                                            ):null }
 
+                                            {(emerg.Emergencia.Estatus != 2  &&    emerg.Emergencia.Voluntaria_Atendio ==  getUruaria().id  )?(    
+
+                                            
+                                                (emerg.Emergencia.Estatus < 5   )?(   <button   className='btn btn-danger'  onClick={() => concluirEmergencia(emerg.Emergencia.id,emerg.Voluntarias)}  > Concluir</button>
+                                                ):null 
+
+                                            ):null}
                                         </div>
                                     </td>
                                 </tr>
@@ -137,19 +145,21 @@ const CompEmergencias = forwardRef((props, ref) => {
                     </table>
 
 
+
+                    </div>
+
+                   
+
                     {/* <!-- Button trigger modal --> */}
 
 
 
-                    <Button variant="primary" onClick={handleShow}>
-        Launch demo modal
-      </Button>
 
 
 
     {emergenciaActual ? (
                                 
-      <Modal show={show} onHide={handleClose} size="xl">
+      <Modal show={show} onHide={handleClose} size="xl" dialogClassName="modal-90w" >
         <Modal.Header closeButton>
           <Modal.Title>Información Emergencia</Modal.Title>
         </Modal.Header>
@@ -159,6 +169,8 @@ const CompEmergencias = forwardRef((props, ref) => {
                         <div className='col col-md-4'>
                              <div className='row'> 
                                 <div className='col '>
+                                        
+
                                         
 
                                 <iframe width="100%" height="400" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
@@ -183,7 +195,7 @@ const CompEmergencias = forwardRef((props, ref) => {
                              <div className='row'>
                                 <div className='col '>
                                         
-
+                                <div className='overflow-auto'>
                                         <div class="card border-info mb-3">
                                             <div class="card-header">Datos de la emergencia</div>
                                             <div class="card-body text-info">
@@ -201,6 +213,22 @@ const CompEmergencias = forwardRef((props, ref) => {
                                                                                 <th>Id</th>
                                                                                 <td>{emergenciaActual.Emergencia.id}</td>                                                                            
                                                                             </tr>
+
+                                                                            <tr>
+                                                                                <th>Coordenadas</th>
+                                                                                <td> 
+                                                                                {(emergenciaActual.Coordenadas.latitud != null && emergenciaActual.Coordenadas.longitud != null) ?
+                                                                                            (<a href={`https://www.google.com/maps/search/?api=1&query=${emergenciaActual.Coordenadas.latitud},${emergenciaActual.Coordenadas.longitud}&zoom=20`} target="_blank"><i className="fa-solid fa-map-location-dot"></i></a>) :
+                                                                                            (null)
+                                                                                        }
+
+                                                                                            {(emergenciaActual.Coordenadas.latitud != null && emergenciaActual.Coordenadas.longitud != null) ?
+                                                                                            (  <span>  {emergenciaActual.Coordenadas.latitud}  {emergenciaActual.Coordenadas.longitud}  </span>   ) :
+                                                                                            (null)
+                                                                                        }       
+                                                                                </td>   
+                                                                            </tr>
+
                                                                             <tr>
                                                                                 <th>Estatus</th>
                                                                                 <td>{emergenciaActual.Emergencia.Estatus}</td>   
@@ -208,7 +236,11 @@ const CompEmergencias = forwardRef((props, ref) => {
 
                                                                             <tr>                                                                            
                                                                                 <th>Atendido por:</th>
-                                                                                <td>{emergenciaActual.Emergencia.Voluntaria_Atendio}</td>                                                                            
+                                                                                <td>
+                                                                                    {/* {emergenciaActual.Emergencia.Voluntaria_Atendio} */}
+                                                                                
+                                                                                      <Link to={`/Usuarios/${emergenciaActual.Emergencia.id}`} >    {emergenciaActual.Emergencia.Voluntaria_Atendio}  </Link>
+                                                                                </td>                                                                            
                                                                             </tr>
                                                                             <tr>
                                                                                 <th>Fecha</th>
@@ -222,6 +254,7 @@ const CompEmergencias = forwardRef((props, ref) => {
                                                 </p>
                                             </div>
                                         </div>
+                                </div>
 
 
                                 </div>                                          
@@ -250,7 +283,7 @@ const CompEmergencias = forwardRef((props, ref) => {
                                                                             </tr>
                                                                             <tr>
                                                                                 <th>Nombre</th>
-                                                                                <td>{emergenciaActual.Usuaria.Nombre} {emergenciaActual.Usuaria.ApellidoPaterno} {emergenciaActual.Usuaria.ApellidoMaterno} </td>
+                                                                                <td>{emergenciaActual.Usuaria.Nombre} {emergenciaActual.Usuaria.ApellidoPaterno}   {emergenciaActual.Usuaria.ApellidoMaterno} </td>
                                                                             </tr>
 
                                                                             <tr>                                                                            
@@ -321,7 +354,7 @@ const CompEmergencias = forwardRef((props, ref) => {
 
                                                                             <td> {caso.deTicket.Descripcion} </td>
                                                                             <td> {caso.deTicket.Semaforo_id} </td>
-                                                                            <td> {caso.deVoluntaria.Nombre}  {caso.deVoluntaria.ApellidoPaterno}  {caso.deVoluntaria.ApellidoMaterno}   (@{caso.deVoluntaria.NickName}) </td> 
+                                                                            <td> {caso.deVoluntaria.Nombre}  {caso.deVoluntaria.ApellidoPaterno}  {caso.deVoluntaria.ApellidoMaterno}    (@<Link to={`/Usuarios/${caso.deVoluntaria.id}`} >{caso.deVoluntaria.NickName}</Link>)   </td> 
                                                                             
                                                                     </tr>  
                                                                 ))}

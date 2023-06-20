@@ -99,7 +99,7 @@ const CompRepNuevasReferentes = () => {
                     <h5 className="card-title">  Nuevas referentes </h5>
                     <p className="card-text ">
 
-                        <div className='row justify-content-center'>
+                        <div className='row justify-content-center  overflow-auto '>
                             
 
 

@@ -8,6 +8,9 @@ import { useNavigate, useParams } from "react-router-dom";
 
 const  ULR_BASE = process.env.REACT_APP_BASE_URL;
 
+
+const  NOMBRE_DOMINIO = process.env.REACT_APP_NOMBRE_DOMINIO;
+
 const URI = ULR_BASE + "change-password/";
 const URIEstatusToken = ULR_BASE + "verify-change-password/";
 
@@ -65,7 +68,8 @@ const CompChangePasswords = () => {
         console.log(response);
 
         setTimeout(function() {
-          navigate("/login");
+         // navigate("https://www.google.com/");
+          window.open(NOMBRE_DOMINIO, '_blank', 'noreferrer');
         }, 2000);
 
         limpiarMsg();

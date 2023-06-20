@@ -17,6 +17,9 @@ const CompRegistrarUsuario = () => {
     setMegError("");
   };
 
+
+  const scrollRef = React.useRef();
+
   const [estados, setEstados] = useState([]);
 
   useEffect(() => {
@@ -100,12 +103,23 @@ const CompRegistrarUsuario = () => {
         console.error(error.response.data);
         limpiarMsg();
         setMegError(error.response.data.message);
+        scrollMsg()
       });
   };
 
+
+
+
+  const  scrollMsg  = () =>{
+    if(scrollRef.current)
+    scrollRef.current.scrollIntoView({ behavior: "smooth" });
+ } 
+
+
+
   return (
     <div className="container">
-      <h3>Registrarse</h3>
+      <h3 ref={scrollRef} >Registrarse</h3>
 
       <div className="alert alert-success" role="alert">
         {msgEstado}

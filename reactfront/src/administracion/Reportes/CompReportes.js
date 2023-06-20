@@ -47,7 +47,7 @@ const CompReportes = () => {
                     </nav>
 
 
-                    <div className="tab-content" id="nav-tabContent">
+                    <div className="tab-content " id="nav-tabContent">
                         <div className="tab-pane fade show active" id="nav-EntidadFederativa" role="tabpanel" aria-labelledby="nav-EntidadFederativa-tab">                               
                             <CompRepEntidadFederativa/>
                         </div>
