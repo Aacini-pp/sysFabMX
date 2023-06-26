@@ -25,15 +25,14 @@ AvanceDeCasoControler.listar = async (req, res) => {
 AvanceDeCasoControler.obtener = async (req, res) => {
     console.log("AvanceDeCasoControler.obtener");
 
-    let casoBuscar =   (req.session.usuaria ) ? req.session.usuaria.id: 1;
- 
-    
+
     try {
-        const ticket = await AvanceDeCasoModel.findAll({
-            where: { AsignacionCaso:  req.body.AsignacionCaso },
+        const avanceCaso = await AvanceDeCasoModel.findAll({
+            where: { id:  req.params.id },
         });
 
-        res.json(ticket);
+        res.json(avanceCaso);
+
     } catch (error) {
         res.status(400)
         res.json({ message: error.message.replace("Validation error: ", "") });

@@ -528,7 +528,7 @@ appControler.MisLogros = async (req, res) => {
 
 
 appControler.misAsignaciones = async (req, res) => {
-    console.log("UsuarioControler.misAsignaciones ");
+    console.log("appControler.misAsignaciones ");
     try {
 
         let idBuscar =   (req.session.usuaria ) ? req.session.usuaria.id: 1;
