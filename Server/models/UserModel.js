@@ -47,6 +47,39 @@ const UsuarioModel = db.define("Usuaria", {
   }
      * 
      */
+
+
+
+  //validar password /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])([A-Za-z\d$@$!%*?&]|[^ ]){8,15}$/;
+
+/* 
+  Minimo 8 caracteres
+  Maximo 15
+  Al menos una letra mayúscula
+  Al menos una letra minucula
+  Al menos un dígito
+  No espacios en blanco
+  Al menos 1 caracter especial */
+
+
+  validate: {
+    is: {
+      args:  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%_*?&])([A-Za-z\d$@$!%_*?&]|[^ ]){6,15}$/ ,
+      msg: `La contraseña no es segura, esta debe de tener: 
+      Minimo 6 caracteres,
+      Maximo 15,
+      Al menos una letra mayúscula,
+      Al menos una letra minucula,
+      Al menos un dígito,
+      No espacios en blanco,
+      Al menos 1 caracter especial ($,@,$,!,%,_,*,?,&)`
+    }
+  }
+
+
+
+
+
   },
 
 
@@ -139,7 +172,7 @@ const UsuarioModel = db.define("Usuaria", {
       medioDeContacto() {
         console.log("medioDeContacto", this.Email, this.Telefono, this.PerfilFB)
         if ((this.Email === null) && (this.Telefono === null) && (this.PerfilFB === null)) {
-          throw new Error('Tiene que especificarse al menos un medio de contacto (Teléfono, Email o Perfil de facebook)');
+          throw new Error('Tiene que especificarse al menos un medio de contacto (Teléfono, Email o Perfil de facebook). ');
         }
       }
     }

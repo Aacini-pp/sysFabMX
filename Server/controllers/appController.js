@@ -27,7 +27,9 @@ appControler.login = async (req, res) => {
 
     try {
         const usuaria = await UsuarioModel.findOne({
-            where: { NickName: req.body.NickName, Pass: req.body.Pass }
+            where: { 
+                [Op.or]: [{ Email: req.body.NickName }, { NickName: req.body.NickName }, , { Telefono: req.body.NickName }] ,
+                Pass: req.body.Pass }
         });
 
         if (usuaria === null) {
@@ -41,92 +43,7 @@ appControler.login = async (req, res) => {
             req.session.usuaria = usuaria.dataValues
             console.log("Sesión creada:", req.session.usuaria);
             
-            //TODO:ordenar esto (quitar?  ) usar  para traer casos 
-        //si el usuario es voluntaria o cordinadora
-        //mandar todas las emergencias que tenga  atrasadas
-        //para corredinadoras  todas
-        //para voluntarias las  que tienen  su caso
 
-        //si esta logeado y 
-        //si es  voluntaria o  Coordinadora quien se logeo recibir info
-        
-    
-    /*
-    if(    [3,4].includes(   req.session.usuaria.Rol  )    ){ 
-        
-
-        const parametrosConsultarEmegencias ={
-            where: { Estatus: 2 }
-        };
-        let  emergenciasPendientes  = null;
-        console.info("---------SE LOGEO UN ADMINISTRADOR");
-        try {            
-            emergenciasPendientes  = await EmergenciaModel.findAll(parametrosConsultarEmegencias).then(function (reg) {    
-               console.log("Longitud  de  registro ",reg.length);
-                reg.map( async (emergencia) => {
-                    let usuariaEmergencia  = await UsuarioModel.findOne(
-                        { where:{id: emergencia.Victima }}
-                    );  
-                    
-        
-                    let emicion = { 
-                        Usuaria: usuariaEmergencia.dataValues, 
-                        Coordenadas: emergencia.dataValues.Ubicacion,
-                        Casos: {}, 
-                        Emergencia: emergencia.dataValues, 
-                        mensaje: "Tengo una emergencia",
-                        Voluntarias:coordinadoras 
-                    }
-                    
-                    
-                    
-                    let canalEmitir = `Emergencias>1` ;//${req.session.usuaria.id}
-                    
-                    
-                    //console.info("---------emergencia"); 
-                    //console.info(canalEmitir, "EnviandoEmergencia");
-                    //console.info(emicion);
-                    
-                    io.emit(canalEmitir, emicion);
-                                            
-                });
-
-                
-            });
-
-            console.log(emergenciasPendientes);
-        } catch (error) {
-            console.log(error.message)
-        }    
-    }
-    */
-
-
-
-/*
-        let emicion = { 
-            Usuaria: req.session.usuaria, 
-            Coordenadas: { latitud: 19.4440547, longitud: -99.2156096 },
-            Casos: {}, 
-            Emergencia: {
-                id: 120,
-                Victima: 42,
-                Voluntaria_Atendio: null,
-                Estatus: 2,
-                Ubicacion: '{"latitud":19.4440547,"longitud":-99.2156096}',
-                updatedAt: '2022-11-08T01:36:49.515Z',
-                createdAt: '2022-11-08T01:36:49.515Z'
-            }, 
-            mensaje: "Tengo una emergencia",
-            Voluntarias: [ 1, 18 ] 
-        }
-        
-        
-        
-        let canalEmitir = `Emergencias>1` ;//${req.session.usuaria.id}
-        
-        io.emit(canalEmitir, emicion);
-*/
 
 
             res.json(usuaria);        
@@ -249,7 +166,7 @@ appControler.PasswordOlvidado = async (req, res) => {
 
     //generar token
     token = generarToken(45) //generar token de tamaño 45
-    urlRecuperarpass = process.env.NOMBRE_DOMINIO + ":3000/change-password/" + token   //TODO:enviar a dotfile  
+    urlRecuperarpass = process.env.NOMBRE_DOMINIO + "/change-password/" + token   //TODO:enviar a dotfile  
 
     infoCLiente = {
         ...generarInfoCliente(req),
@@ -484,7 +401,11 @@ appControler.misTickets = async (req, res) => {
 
     try {
         const ticket = await TicketModel.findAll({
-            where: { Usuaria: req.session.usuaria.id },
+            where: { Usuaria:  req.session.usuaria.id,
+                    [Op.not]: [
+                            { Estatus:5 }   //no mostrar las concluidas
+                    ]
+             },
             include: [
                 { association: relaciones.Tickets.Estatus }
             ]
@@ -501,6 +422,31 @@ appControler.misTickets = async (req, res) => {
 
 
 
+appControler.misTicketsDelete = async (req, res) => {
+    console.log("appControler.misTicketsDelete")
+
+
+    try {
+        await TicketModel.update({
+            Estatus:5   //actualizar estatus a 5 :  Concluido 
+
+        }, {
+            where: { id: req.params.id }
+        });
+
+        res.json({ message: "Registro concluido correctamente" });
+
+    } catch (error) {
+        res.status(400)
+        res.json({ message: error.message.replace("Validation error: ", "") });
+    }
+
+
+
+
+}
+
+
 
 
 appControler.MisLogros = async (req, res) => {
@@ -508,7 +454,7 @@ appControler.MisLogros = async (req, res) => {
 
     try {
         const ticket = await Premios_UsuariaModel.findAll({
-            where: { Usuaria:req.session.usuaria.id },
+            where: { Usuaria:req.session.usuaria.id, },
             include: [
                 { association: relaciones.Premios_Usuaria.CatPremios }
             ]
@@ -536,7 +482,12 @@ appControler.misAsignaciones = async (req, res) => {
         const casos = await AsignacionCasoModel.findAll({
 
           
-            where: { Voluntaria:   req.session.usuaria.id  },
+            where: { Voluntaria:   req.session.usuaria.id,
+                    [Op.not]: [
+                                { Estatus:5 }   //no mostrar las concluidas
+                
+                    ]
+             },
             // Queremos que incluya la relaciónES
             include: [
                 {
@@ -553,6 +504,29 @@ appControler.misAsignaciones = async (req, res) => {
 
 
         res.json(casos);
+    } catch (error) {
+        res.status(400)
+        res.json({ message: error.message.replace("Validation error: ", "") });
+    }
+
+}
+
+
+
+appControler.misAsignacionesDelete = async (req, res) => {
+    console.log("appControler.misAsignacionesDelete")
+
+
+    try {
+        await AsignacionCasoModel.update({
+            Estatus:5   //actualizar estatus a 5 :  Concluido 
+
+        }, {
+            where: { id: req.params.id }
+        });
+
+        res.json({ message: "Registro concluido correctamente" });
+
     } catch (error) {
         res.status(400)
         res.json({ message: error.message.replace("Validation error: ", "") });

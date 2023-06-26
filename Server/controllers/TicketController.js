@@ -1,6 +1,8 @@
 import 'dotenv/config'
 import axios from 'axios'
 
+import { Op } from "sequelize"
+
 import TicketModel from "../models/TicketModel.js";
 import UsuarioModel from "../models/UserModel.js";
 
@@ -53,6 +55,12 @@ TicketControler.listar = async (req, res) => {
     console.log("TicketControler.listar");
     try {
         const tickets = await TicketModel.findAll({
+
+            where: {[Op.not]: [
+                                 { Estatus:5 }
+              
+                    ]},
+
             // Queremos que incluya la relación "Estado"
             include: [
                 { association: relaciones.Tickets.Usuaria },

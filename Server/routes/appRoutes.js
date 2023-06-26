@@ -7,15 +7,15 @@ import sessionMiddleware from './../middleware/session.js'
 const router = express.Router();
 
 
-//MIDDLEWARE
-//AGREGAR MIDLEWARE
+        //MIDDLEWARE
+        //AGREGAR MIDLEWARE
 
 //acceder logeado
 
 router.get("/logout", sessionMiddleware);
-router.get("/MisAsignaciones", sessionVoluntoria);
-router.get("/MisTickets", sessionMiddleware);
-router.get("/MisLogros", sessionVoluntoria);
+// router.get("/MisAsignaciones", sessionVoluntoria);
+// router.get("/MisTickets", sessionMiddleware);
+// router.get("/MisLogros", sessionVoluntoria);
 
 
 
@@ -37,7 +37,11 @@ router.post("/change-password", appControler.CambiarPassword);
 //acceder logeado
 router.get("/logout", appControler.logout); //cambiar a post para que sea mas dificik salir, no solo conun enlace
 router.get("/MisAsignaciones", appControler.misAsignaciones);
+router.delete("/MisAsignaciones/:id", appControler.misAsignacionesDelete);
+
 router.get("/MisTickets", appControler.misTickets);
+router.delete("/MisTickets/:id", appControler.misTicketsDelete);
+
 router.get("/MisLogros", appControler.MisLogros);
 router.get("/MisMensages", appControler.MisMensages);
 

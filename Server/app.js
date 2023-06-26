@@ -30,10 +30,13 @@ import ReportesRoutes from './routes/reportesRoutes.js'
 import appRoues from './routes/appRoutes.js'
 
 
+
 //middlewares
 
 import sessionMiddleware from './middleware/session.js'
 import sessionCoordinadora from './middleware/sessionCoordinadora.js'
+
+import errro404Middleware from './middleware/errro404Middleware.js'
 
 
 import UsuarioModel from "./models/UserModel.js"
@@ -121,7 +124,7 @@ app.use("/AvanceDeCaso/", avanceDeCasoRoutes);
 app.use("/Cat", CatRoutes);
 app.use("/Cat/Estados", EstadosRoutes);
 
-
+app.use( errro404Middleware);
 
 
 
